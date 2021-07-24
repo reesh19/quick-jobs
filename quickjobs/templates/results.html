@@ -9,14 +9,11 @@
     </div>
   </div>
   <div class="bs-docs-section">
-    <div class="row">
-      <div class="col-lg-10">
-        {% for list in results %}
-          {% for url in list %}
-            <p>
-              <span class="stack" href={{url}}>{{ url }}</span>
-            </p>
-          {% endfor %}
-          <p></p>
+    <div class="row" style="margin-top: 20px;">
+      <div class="col">
+        {% for url in results %}
+            <p></p>
+            <a href="{{ url }}">{{ url }}</a>
+            <p></p>
         {% endfor %}
 {% endblock %}

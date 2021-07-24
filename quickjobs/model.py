@@ -139,14 +139,13 @@ def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_r
     queries = [f""""{s} site:https://{url}/* after:{t_str}""" for url in urls]
 
     results = []
-    
-    for i in queries:
-        results.append([j for j in search(i, stop=max_results, pause=3)])
-    
+
     count = 0
-    
-    for i in results:
-        count += len(i)
+
+    for i in queries:
+        for j in search(i, stop=max_results, pause=3):
+            results.append(j)
+            count += 1
 
     message = f'Found {count} jobs posted in the last {n_days} day(s):'
 

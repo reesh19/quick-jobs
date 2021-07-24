@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="margin-top: 50px;">
+  <div class="page-header" id="banner">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2>Let's get you a job, eh?</h2>
+      </div>
+    </div>
+  </div>
+  <div class="bs-docs-section">
+    <div class="row">
+      <div class="col-lg-10">
+        <div class="bs-component">
+          <form action="/home" method="post">
+            <fieldset>
+              <legend style="font-size: medium; font-style: italic; margin-top: 10px;">Note: this application currently scrapes 4 job boards(lever, workable, greenhouse, jobvite)</legend>
+              <div class="form-row" style="margin-top: 40px; margin-bottom: 20px;">
+                <div class="col" style="margin-top: 10px; margin-bottom: 10px;">
+                  <label for="location" style="font-size: medium;">Location(s) (separated by commas)</label>
+                  <input type="text" class="form-control" id="location" name="location" 
+                  placeholder="ex1: los angeles    ex2: canada     ex3: chicago,san francisco,italy">
+                </div>
+              </div>              
+              <div class="form-row" style="margin-top: 20px; margin-bottom: 20px;">
+                <div class="col" style="margin-top: 10px; margin-bottom: 10px;">
+                  <label for="job_titles" style="font-size: medium;">Desired Title(s) (separated by commas)</label>
+                  <input type="text" class="form-control" id="job_titles" name="job_titles" placeholder="ex1: babysitter    ex2: Data Engineer,Cook,Librarian" required>
+                </div>
+              </div>
+              <div class="form-row" style="margin-bottom: 20px; margin-top: 20px;"> 
+                <div class="col" style="margin-top: 10px; margin-bottom: 20px; margin-right: 20px;">
+                  <label for="n_days" style="font-size: medium;">Number of days</label>
+                  <input type="number" class="form-control" id="n_days" name="n_days" min="1" max="30" placeholder="0-30" required>
+                </div>
+                <div class="col" style="margin-top: 10px; margin-bottom: 20px; margin-right: 20px; margin-left: 20px;">
+                  <label for="max_results" style="font-size: medium;">Max results (per job board!)</label>
+                  <input type="number" class="form-control" id="max_results" name="max_results" min="0" max="20" placeholder="0-20" required>
+                </div>
+                <div class="col" style="margin-left: 20px; margin-right: 5px; margin-top: 30px;">
+                  <div class="col">
+                    <label for="remote" style="margin-right: 10px; font-size: medium;">  Only remote  </label>
+                    <input type="hidden" id="remote" name="remote" value=0>
+                    <input type="checkbox" id="remote" name="remote" value=1>
+                  </div>
+                </div>
+                <div class="col" style="margin-left: 5px; margin-top: 30px;">
+                  <div class="col">
+                    <label for="ignore_director" style="margin-right: 10px; font-size: medium;">Ommit 'Director'</label>
+                    <input type="hidden" id="ignore_director" name="ignore_director" value=0>
+                    <input type="checkbox" id="ignore_director" name="ignore_director" value=1>
+                  </div>
+                </div>
+              </div>
+              <button type="button; submit" class="btn btn-primary btn-lg" style="margin-top: 40px;">Submit</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

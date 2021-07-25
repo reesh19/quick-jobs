@@ -4,7 +4,7 @@ from datetime import timedelta as td
 from pytz import timezone as tz
 
 
-def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_results=10, n_days=1):
+def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_results=None, n_days=None):
     """
     Performs hyper-precise job searches on 4 popular job boards
     -----------------------------------------------------------
@@ -79,18 +79,18 @@ def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_r
             'boards.greenhouse.io', 
             'jobs.jobvite.com/*/job']
 
-    if job_titles:
-        titles = job_titles
+    # if job_titles:
+    #     titles = job_titles
     
-    else:
-        titles = ["Data Scientist",
-                  "Data Analyst",
-                  "Data Engineer",
-                  "Machine Learning Engineer",
-                  "ML Engineer",
-                  "Machine Learning Scientist",
-                  "Quantitative Analyst",
-                  "Quantitative Researcher"]
+    # else:
+    #     titles = ["Data Scientist",
+    #               "Data Analyst",
+    #               "Data Engineer",
+    #               "Machine Learning Engineer",
+    #               "ML Engineer",
+    #               "Machine Learning Scientist",
+    #               "Quantitative Analyst",
+    #               "Quantitative Researcher"]
     
     s = ''
 
@@ -107,27 +107,27 @@ def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_r
                 if l < len(loc):
                     s += 'OR '
         else:
-            message = 'That is not a valid location(s) friend...'
-            return
+            # message = 'That is not a valid location(s) friend...'
+            return # message
     
     if remote:
         s += """"remote" """
 
     n = 0
 
-    if type(titles) == str:
-        s += f""""{titles}" """
+    if type(job_titles) == str:
+        s += f""""{job_titles}" """
     
-    elif type(titles) == list and type(titles[0]) == str:
-        for i in titles:
+    elif type(job_titles) == list and type(job_titles[0]) == str:
+        for i in job_titles:
             s += f""""{i}" """
             n += 1
-            if n < len(titles):
+            if n < len(job_titles):
                 s += 'OR '
     
     else:
-        message = 'Whoopsie, no valid job title(s) found... Try again?'
-        return message
+        # message = 'Whoopsie, no valid job title(s) found... Try again?'
+        return # message
     
     if ignore_director: 
             s += '-director'

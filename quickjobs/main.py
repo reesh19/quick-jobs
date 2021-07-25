@@ -16,8 +16,8 @@ def create_app():
     def home():
         """Reads inputs, calls mmodel, returns prediction page"""
         if request.method == "POST":
-            lc = str(request.values["location"]).split(',')
-            ts = str(request.values['job_titles']).split(',')
+            lc = request.values["location"].split(',')
+            ts = request.values['job_titles'].split(',')
             
             de = bool(request.values['ignore_director'])
             re = bool(request.values['remote'])

@@ -104,35 +104,35 @@ def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_r
             for i in loc:
                 s += f""""{i}" """
                 l += 1
+                
                 if l < len(loc):
                     s += 'OR '
-        else:
-            # message = 'That is not a valid location(s) friend...'
-            return # message
+        
+        else: pass
+
+    if job_titles:
+        if type(job_titles) == str:
+            s += f""""{job_titles}" """
+        
+        elif type(job_titles) == list and type(job_titles[0]) == str:
+            n = 0
+
+            for i in job_titles:
+                s += f""""{i}" """
+                n += 1
+                
+                if n < len(job_titles):
+                    s += 'OR '
+        
+        else: pass
     
     if remote:
         s += """"remote" """
-
-    n = 0
-
-    if type(job_titles) == str:
-        s += f""""{job_titles}" """
-    
-    elif type(job_titles) == list and type(job_titles[0]) == str:
-        for i in job_titles:
-            s += f""""{i}" """
-            n += 1
-            if n < len(job_titles):
-                s += 'OR '
-    
-    else:
-        # message = 'Whoopsie, no valid job title(s) found... Try again?'
-        return # message
     
     if ignore_director: 
             s += '-director'
 
-    dtformat = "%Y-%m-%d"
+    dtformat = "%Y-%M-%D"
     yesterday = dt.now().astimezone(tz('US/Pacific')) - td(n_days)
     t_str = yesterday.astimezone(tz('US/Pacific')).strftime(dtformat)
 
@@ -148,5 +148,5 @@ def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_r
             count += 1
 
     message = f'Found {count} jobs posted in the last {n_days} day(s):'
-
+    
     return message, results

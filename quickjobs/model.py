@@ -79,18 +79,20 @@ def get_jobs(loc=None, remote=None, job_titles=None, ignore_director=None, max_r
             'boards.greenhouse.io', 
             'jobs.jobvite.com/*/job']
 
-    # if job_titles:
-    #     titles = job_titles
+    if job_titles:
+        titles = job_titles
     
-    # else:
-    #     titles = ["Data Scientist",
-    #               "Data Analyst",
-    #               "Data Engineer",
-    #               "Machine Learning Engineer",
-    #               "ML Engineer",
-    #               "Machine Learning Scientist",
-    #               "Quantitative Analyst",
-    #               "Quantitative Researcher"]
+    else:
+        titles = ["Data Scientist",
+#                   "Data Analyst",
+#                   "Data Engineer",
+                  "Machine Learning Engineer",
+                  "ML Engineer",
+#                   "Machine Learning Scientist",
+#                   "Quantitative Analyst",
+                  "Machine Learning",
+                  "Data Science"]
+#                   "Quantitative Researcher"]
     
     s = ''
 

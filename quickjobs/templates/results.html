@@ -11,9 +11,11 @@
   <div class="bs-docs-section">
     <div class="row" style="margin-top: 20px;">
       <div class="col">
-        {% for url in results %}
-            <p></p>
-            <a href="{{ url }}">{{ url }}</a>
-            <p></p>
+        {% for domain in results %}
+          <p></p>
+          {% for job in domain %}
+            <a href="{{ job[1] }}">{{ url[0] }}</a>
+          {% endfor %}
+          <p></p>
         {% endfor %}
 {% endblock %}

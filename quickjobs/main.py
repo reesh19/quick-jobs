@@ -1,6 +1,6 @@
 """Main routing for Quick Jobs App"""
-from flask import Flask, render_template, request , redirect #, url_for
-from .model import get_jobs
+from flask import Flask, render_template, request, redirect
+from .model2 import get_jobs
 
 def create_app():
     """Create Flask Application"""
@@ -14,19 +14,19 @@ def create_app():
 
     @app.route("/home", methods=["POST", "GET"])
     def home():
-        """Reads inputs, calls mmodel, returns prediction page"""
+        """Reads inputs, calls model, returns prediction page"""
         if request.method == "POST":
             lc = request.values["location"].split(',')
-            ts = request.values['job_titles'].split(',')
+            jt = request.values['job_titles'].split(',')
             
-            de = bool(request.values['ignore_director'])
+            id = bool(request.values['ignore_director'])
             re = bool(request.values['remote'])
             
-            rs = int(request.values['max_results'])
-            ds = int(request.values['n_days'])
+            mr = int(request.values['max_results'])
+            nd = int(request.values['n_days'])
             
-            message, results = get_jobs(loc=lc, remote=re, job_titles=ts,
-                            ignore_director=de, max_results=rs, n_days=ds)
+            message, results = get_jobs(loc=lc, remote=re, job_titles=jt,
+                            ignore_director=id, max_results=mr, n_days=nd)
 
             return render_template("results.html", 
                                     message=message, 

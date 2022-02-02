@@ -171,6 +171,9 @@ def get_jobs(loc="Los Angeles", remote=False, job_titles=titles, ignore_director
             req = session.get(url)
             soup = bs(req.content, 'html.parser')
             title = soup.title.get_text()
+            
+            if title.startswith('Job'):
+                title = title.strip('Job Application for ')
 
             res.append((title, url))
             count += 1

@@ -169,7 +169,7 @@ def get_jobs(loc="Los Angeles", remote=False, job_titles=titles, ignore_director
 
         for url in search(i, stop=max_results, pause=4, user_agent=agent):
             req = session.get(url)
-            soup = bs(req.content,) #, 'html.parser')
+            soup = bs(req.content, 'html.parser')
             title = soup.title.get_text()
 
             res.append((title, url))

@@ -5,22 +5,14 @@ from bs4 import BeautifulSoup as bs
 import requests
 
 titles = ["Data Scientist",
-          "Machine Learning Engineer",
-          "ML Engineer",
           "Machine Learning",
-          "Data Science",
+          "ML Engineer",
           "Data Analyst",
           "Quantitative Analyst",
-          "Python",
-          "Pandas",
-          "Scikit-Learn",
-          "TensorFlow",
-          "Keras",
-          "Pytorch",
           "Artificial Intelligence",
           "Deep Learning"]
 
-def get_jobs(loc="Los Angeles", remote=False, job_titles=titles, ignore_director=True, max_results=20, n_days=7):
+def get_jobs(loc=None, remote=False, job_titles=None, ignore_director=True, max_results=20, n_days=3):
     """
     Performs hyper-precise job searches on 4 popular job boards
     -----------------------------------------------------------
@@ -116,6 +108,9 @@ def get_jobs(loc="Los Angeles", remote=False, job_titles=titles, ignore_director
 
     if job_titles:
 
+        if job_titles == 'ds':
+            job_titles = titles
+
         if type(job_titles) == str:
             s += f""""{job_titles}" """
 
@@ -135,7 +130,7 @@ def get_jobs(loc="Los Angeles", remote=False, job_titles=titles, ignore_director
         s += 'remote '
 
     if ignore_director: 
-            s += '-Director -Principal -Lead'
+            s += "-Director -Principal -Lead"
 
     dtformat = "%Y-%m-%d"
     t0 = dt.now() - td(n_days)

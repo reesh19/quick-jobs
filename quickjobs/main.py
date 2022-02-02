@@ -22,8 +22,8 @@ def create_app():
             id = bool(request.values['ignore_director'])
             re = bool(request.values['remote'])
             
-            mr = request.values['max_results']
-            nd = request.values['n_days']
+            mr = int(request.values['max_results'])
+            nd = int(request.values['n_days'])
             
             message, results = get_jobs(loc=lc, remote=re, job_titles=jt,
                             ignore_director=id, max_results=mr, n_days=nd)

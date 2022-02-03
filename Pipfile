@@ -16,6 +16,7 @@ bs4 = "*"
 requests = "*"
 mechanize = "*"
 requests-ip-rotator = "*"
+rq = "*"
 
 [dev-packages]
 ipykernel = "*"

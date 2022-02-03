@@ -1,6 +1,8 @@
 """Main routing for Quick Jobs App"""
 from flask import Flask, render_template, request, redirect
 from .model2 import get_jobs
+from rq import Queue
+from worker import conn
 
 def create_app():
     """Create Flask Application"""

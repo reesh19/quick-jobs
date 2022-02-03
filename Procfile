@@ -1,1 +1,1 @@
-web: gunicorn quickjobs:APP -t 480
+web: gunicorn quickjobs:APP -t 15 worker: python worker.py 

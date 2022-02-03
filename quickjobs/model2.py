@@ -5,12 +5,12 @@ from bs4 import BeautifulSoup as bs
 import requests
 
 titles = ["Data Scientist",
-          "Machine Learning",
-          "ML Engineer",
-          "Data Analyst",
-          "Quantitative Analyst",
-          "Artificial Intelligence",
-          "Deep Learning"]
+          "Machine Learning"]
+        #   "ML Engineer",
+        #   "Data Analyst",
+        #   "Quantitative Analyst",
+        #   "Artificial Intelligence",
+        #   "Deep Learning"]
 
 def get_jobs(loc=None, remote=False, job_titles=None, ignore_director=True, max_results=20, n_days=3):
     """
@@ -170,6 +170,7 @@ def get_jobs(loc=None, remote=False, job_titles=None, ignore_director=True, max_
             if title.startswith('Job'):
                 title = title.strip('Job Application for ')
 
+            # if any(job.lower() in title.lower() for job in job_titles):
             res.append((title, url))
             count += 1
 
@@ -177,4 +178,4 @@ def get_jobs(loc=None, remote=False, job_titles=None, ignore_director=True, max_
 
     message = f'Found {count} jobs posted in the last {n_days} day(s):'
 
-    return message, results
+    return message, results, queries

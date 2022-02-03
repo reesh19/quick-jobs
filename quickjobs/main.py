@@ -7,6 +7,7 @@ from worker import conn
 def create_app():
     """Create Flask Application"""
     app = Flask(__name__)
+    q = Queue(connection=conn)
 
     @app.route("/")
     def root():
@@ -27,7 +28,7 @@ def create_app():
             mr = int(request.values['max_results'])
             nd = int(request.values['n_days'])
             
-            message, results, queries = get_jobs(loc=lc, remote=re, job_titles=jt, ignore_director=id, max_results=mr, n_days=nd)
+            message, results, queries = q.enqueue(get_jobs(loc=lc, remote=re, job_titles=jt, ignore_director=id, max_results=mr, n_days=nd))
 
             return render_template("results.html", 
                                     message=message, 

@@ -178,4 +178,5 @@ def get_jobs(loc=None, remote=False, job_titles=None, ignore_director=True, max_
 
     message = f'Found {count} jobs posted in the last {n_days} day(s):'
 
-    return message, results
+    # return message, results
+    return message, results, queries

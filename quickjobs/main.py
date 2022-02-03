@@ -25,12 +25,12 @@ def create_app():
             mr = int(request.values['max_results'])
             nd = int(request.values['n_days'])
             
-            message, results = get_jobs(loc=lc, remote=re, job_titles=jt,
-                            ignore_director=id, max_results=mr, n_days=nd)
+            message, results, queries = get_jobs(loc=lc, remote=re, job_titles=jt, ignore_director=id, max_results=mr, n_days=nd)
 
             return render_template("results.html", 
                                     message=message, 
-                                    results=results)
+                                    results=results,
+                                    queries=queries)
         
         return render_template("home.html")
 

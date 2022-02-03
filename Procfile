@@ -1,1 +1,1 @@
-web: gunicorn quickjobs:APP -t 240
+web: gunicorn quickjobs:APP -t 480

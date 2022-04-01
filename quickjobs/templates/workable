@@ -1,0 +1,51 @@
+firstname 
+    span: id="firstname_label"
+    input: id,data-ui,name="firstname" aria-labelledby="firstname_label" type="text"
+lastname
+    span: id="lastname_label"
+    input: id,data-ui,name="lastname" aria-labelledby="lastname_label" type="text"
+email
+    span: id="email_label"
+    input: id,data-ui,name="email" aria-labelledby="email_label" type="email"
+phone
+    span: id="phone_label"
+    input: name="phone" type="tel" data-intl-tel-input-id="0"
+
+address
+    span: id="address_label"
+    input: id,data-ui,name="address" aria-labelledby="address_label" type="text"
+summary
+    span: id="summary_label"
+    textarea: id,data-ui,name="summary" aria-labelledby="summary_label"
+
+resume
+    span: role="button"
+    input: data-ui="resume" id="input_files_input_5481809652568918" type="file"
+
+cover letter
+    span: id="cover_letter_label"
+    input: id,data-ui,name="cover_letter" aria-labelledby="cover_letter_label" type="text"
+
+submit
+    button: data-ui="apply-button" type="submit" 'Submit application'
+
+
+my_info = {'fullname': 'Ricardo Rodriguez',
+           'name1': 'Ricardo', 
+           'name2': 'Rodriguez',
+           'email': 'rodriguezr235@gmail.com',
+           'phone': '7083743618',
+           'linkedin': 'https://www.linkedin.com/in/ricardo-a-rodriguez-f/',
+           'github': 'https://github.com/reesh19',
+           'resume': '/Users/reesh/Projects/qj/quickjobs/resume.pdf',
+           'website': 'https://ricardo-rodriguez.medium.com/'}
+
+<a data-ui="remove-section" title="Delete" aria-label="Delete University of Illinois at Urbana" class="styles--jQpn9 " tabindex="0" role="button"><svg><use xlink:href="#trash16"></use></svg></a>
+
+<a data-ui="remove-section" title="Delete" aria-label="Delete University of Illinois at Urbana" class="styles--jQpn9 " tabindex="0" role="button"><svg><use xlink:href="#trash16"></use></svg></a>
+
+//*[@id="app"]/div/div/div/main/form/section[2]/div[2]/div[1]/ul/li/div/div/div/a[2]
+//*[@id="app"]/div/div/div/main/form/section[2]/div[2]/div[1]/ul/li/div/div/div/a[2]/svg/use/@xlink:href
+#app > div > div > div > main > form > section:nth-child(4) > div.styles--2uKQq > div:nth-child(2) > ul > li:nth-child(1) > div > div > div
+//*[@id="app"]/div/div/div/main/form/section[2]/div[2]/div[2]/ul/li[1]/div/div/div
+//*[@id="app"]/div/div/div/main/form/button

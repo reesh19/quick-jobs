@@ -1,0 +1,62 @@
+<input type="text" 
+       id="first_name" 
+       name="job_application[first_name]"
+       aria-required="true" 
+       maxlength="255" 
+       autocomplete="given-name">
+
+<input type="text" 
+       id="last_name" 
+       name="job_application[last_name]"
+       aria-required="true" 
+       maxlength="255" 
+       autocomplete="family-name">
+
+<input type="text" 
+       id="email" 
+       name="job_application[email]" 
+       aria-required="true"
+       maxlength="255" 
+       autocomplete="email">
+
+<input type="text" 
+       id="phone" 
+       name="job_application[phone]" 
+       maxlength="255"
+       autocomplete="tel">
+
+<div class="attach-or-paste " 
+     required="required" 
+     data-allow-s3="true" 
+     data-field="resume" 
+     data-file-types="['pdf','doc','docx','txt','rtf']" 
+     data-model="job_application">
+    
+    <div class="link-container">
+    <a data-source="attach" 
+       aria-labelledby="resume">Attach</a></div>
+
+<div data-messages="uploaders"></div>
+
+<div class="validation-anchor" 
+        id="validate_resume"></div>
+
+<input type="text" 
+        name="job_application[answers_attributes][0][text_value]"
+        id="job_application_answers_attributes_0_text_value"
+        aria-required="true" maxlength="255"
+        autocomplete="custom-question-preferred-name-let-us-know...">
+
+<input type="text" 
+        name="job_application[answers_attributes][1][text_value]"
+        id="job_application_answers_attributes_1_text_value"
+        aria-required="true" 
+        maxlength="255"
+        autocomplete="custom-question-what-are-your-pronouns...">
+
+<input type="text" 
+        name="job_application[answers_attributes][2][text_value]"
+        id="job_application_answers_attributes_2_text_value"
+        aria-required="false" 
+        maxlength="255"
+        autocomplete="custom-question-linkedin-profile">

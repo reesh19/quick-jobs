@@ -1,0 +1,149 @@
+<li class="application-question resume">
+    <label>
+        <div class="application-label">Resume/CV <span class="required">✱</span></div>
+        <div class="application-field">
+
+            <a href="#" class="postings-btn template-btn-utility visible-resume-upload">
+                <span class="filename"></span>
+                <span class="default-label">ATTACH RESUME/CV</span>
+                <input class="application-file-input invisible-resume-upload"
+                        data-qa="input-resume"
+                        id="resume-upload-input"
+                        name="resume" 
+                        tabindex="-1"
+                        type="file"></a>
+
+            <span class="resume-upload-failure">
+                <div class="resume-upload-label">Couldn't auto-read res...</div></span>
+            
+            <span class="resume-upload-working">
+                <div class="loading-indicator"></div>
+                <div class="resume-upload-label">Analyzing res...</div></span>
+            
+            <span class="resume-upload-success">
+                <div class="loading-indicator completed">
+                    <svg class=" icon icon-check" 
+                            width="16px" 
+                            height="16px"
+                            viewBox="0 0 16 16"></svg></div>
+                <div class="resume-upload-label">Success!</div></span>
+        </div>
+    </label>
+
+    <span class="resume-upload-oversize">
+        <p class="error-message">File exceeds 100MB. Please try a smaller size.</p></span></li>
+
+<li class="application-question">
+    <label>
+        <div class="application-label">Full name<span class="required">✱</span></div>
+        <div class="application-field">
+            <input type="text" name="name" required=""></div>
+    </label>
+</li>
+
+<li class="application-question">
+    <label>
+        <div class="application-label">Email<span class="required">✱</span></div>
+        <div class="application-field">
+            <input name="email" 
+                    type="email"
+                    required=""></div>
+    </label>
+
+</li>
+<li class="application-question">
+    <label>
+        <div class="application-label">Phone <span class="required">✱</span></div>
+        <div class="application-field">
+            <input type="text" 
+                    name="phone" 
+                    required=""></div>
+    </label>
+</li>
+
+<li class="application-question">
+    <label>
+        <div class="application-label">Current company </div>
+        <div class="application-field">
+            <input type="text" name="org"></div>
+    </label>
+</li>
+
+<div class="section page-centered application-form">
+    <ul>
+        <li class="application-question">
+            <label>
+                <div class="application-label">LinkedIn URL<span class="required">✱</span></div>
+
+                <div class="application-field">
+                    <input type="text" name="urls[LinkedIn]" required=""></div></label></li>
+
+        <li class="application-question">
+            <label>
+                <div class="application-label">GitHub URL</div>
+                <div class="application-field">
+                    <input type="text" name="urls[GitHub]"></div></label>
+        </li>
+        
+        <li class="application-question">
+            <label>
+                <div class="application-label">Portfolio URL</div>
+                <div class="application-field">
+                    <input type="text" name="urls[Portfolio]"></div></label>
+        </li>
+
+        <li class="application-question">
+            <label>
+                <div class="application-label">Other website</div>
+                <div class="application-field">
+                    <input type="text" name="urls[Other]"></div></label>
+        </li>
+    </ul>
+</div>
+
+
+<div class="section page-centered application-form">
+    <label for="additional-information"></label>
+    <div class="application-additional">
+        <textarea placeholder="Add a cover letter or anything else you want to share."
+                    name="comments" 
+                    id="additional-information"></textarea></div></div>
+
+
+<div class="section page-centered application-form" data-qa="consent-section">
+    <li class="application-question">
+        <div class="application-field full-width">
+                        <input type="hidden" 
+                                name="consent[marketing]"
+                                value="0">
+
+                        <input type="checkbox" 
+                                name="consent[marketing]"
+                                value="1">
+                        
+                        <p class="application-answer-alternative">Yes, GYANT can contact me about future job opportunities for up to 2 years<br>
+                            <a href="https://gyant.com/privacy"
+                                target="_blank" 
+                                class="link"></a></p>
+        </div>
+    </li>
+</div>
+
+<div class="h-captcha" data-sitekey="e33f87f8-88ec-4e1a-9a13-df9bbb1d8120">
+    <iframe src="https://newassets.hcaptcha.com/captcha/v1/f5a464c/static/hcaptcha-checkbox.html#id=02y592je2te&amp;host=jobs.lever.co&amp;sentry=true&amp;reportapi=https%3A%2F%2Faccounts.hcaptcha.com&amp;recaptchacompat=true&amp;custom=false&amp;hl=en&amp;tplinks=on&amp;sitekey=e33f87f8-88ec-4e1a-9a13-df9bbb1d8120&amp;theme=light" 
+            title="widget containing checkbox for hCaptcha security challenge" 
+            tabindex="0" 
+            frameborder="0" 
+            scrolling="no" 
+            data-hcaptcha-widget-id="02y592je2te" 
+            data-hcaptcha-response="" 
+            style="width: 303px; height: 78px; overflow: hidden;"></iframe>
+
+    <textarea id="g-recaptcha-response-02y592je2te" 
+              name="g-recaptcha-response" 
+              style="display: none;"></textarea>
+    
+    <textarea id="h-captcha-response-02y592je2te" 
+              name="h-captcha-response" 
+              style="display: none;"></textarea></div>
+

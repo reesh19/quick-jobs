@@ -1,0 +1,11 @@
+
+first name: //input[@autocomplete='given-name']
+last name: //input[@autocomplete='family-name']
+email: //input[@autocomplete='email']
+full address: //input[@autocomplete='Full Address*']
+phone: //input[@autocomplete='tel']
+compensation: //input[@type='number']
+speak other languages: //input[@id='jv-field-y6fLXfwN']
+where did you find this: //select[@name='input-ymvuXfw2']//child::option[@label='Other']
+work status: //select[@name='input-yfJRXfww']//child::option[@label='Permanent Resident']
+resume: //input[@id='file-input-0']

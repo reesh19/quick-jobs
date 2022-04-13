@@ -17,6 +17,11 @@ requests = "*"
 mechanize = "*"
 requests-ip-rotator = "*"
 rq = "*"
+selenium = "*"
+autopep8 = "*"
+sklearn = "*"
+country-list = "*"
+requests-html = "*"
 
 [dev-packages]
 ipykernel = "*"

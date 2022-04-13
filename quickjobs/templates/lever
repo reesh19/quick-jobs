@@ -147,3 +147,5 @@
               name="h-captcha-response" 
               style="display: none;"></textarea></div>
 
+
+location: //div[@class='posting-categories']

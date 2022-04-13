@@ -4,18 +4,23 @@ from datetime import timedelta as td
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from country_list import countries_for_language
+
 import requests
 import time
 import os
+import re
 
 class QuickJobs(object):
-    def __init__(self, loc=None, remote=True, job_titles=None, ignore_director=True, max_results=50, n_days=5):
+    def __init__(self, loc=None, remote=True, job_titles=None, ignore_director=True, max_results=100, n_days=5):
         self.loc = loc
         self.remote = remote
         self.job_titles = job_titles
         self.ignore_director = ignore_director
         self.max_results = max_results
         self.n_days = n_days
+
+        self.countries = self.get_countries()
 
         self.my_info = {'fullname': 'Ricardo Rodriguez',
                         'name1': 'Ricardo', 
@@ -32,14 +37,20 @@ class QuickJobs(object):
                         'website': 'https://ricardo-rodriguez.medium.com/',
                         'salary': '$100,000'}
         self.ds_titles = ["data analyst", "data scientist", "machine learning"]
-        self.ds_undesired = ['senior', 'sr.', 'staff', 'lead']
+        self.ds_undesired = ['senior', 
+                             'sr.',
+                             'staff',
+                             'lead', 
+                             'principal', 
+                             'director']
         self.ds_jobs = ['machine learning', 
                         'data scientist', 
-                        'mle', 
-                        'ml engineer', 
-                        'data science', 
-                        'data analyst', 
-                        'technical services engineer']
+                        'data analyst',
+                        'technical analyst',
+                        'consultant',
+                        'builtin-url',
+                        'builtin-redirect',
+                        'workable-url']
         self.ds_locs = ['Los Angeles', 
                         'Culver City', 
                         'Coupertino', 
@@ -47,9 +58,10 @@ class QuickJobs(object):
                         'California']
         self.urls = ['jobs.lever.co/*', 
                      'apply.workable.com/*', 
-                     'boards.greenhouse.io/*/jobs', 
-                     'jobs.jobvite.com', 
+                     'boards.greenhouse.io/*', 
+                     'jobs.jobvite.com/*', 
                      'builtin.com/job/*']
+
         self.agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Safari/605.1.15'
 
         self.lever = dict()
@@ -58,19 +70,60 @@ class QuickJobs(object):
         self.jobvite = dict()
         self.builtin = dict()
         self.other = dict()
+        self.all_jobs = dict()
+        self.crawl_error = dict()
 
-        self.results = []
-        self.crawl_error = []
-        self.automation_error = []
-        
-        self.count = 0
-
+        print('Building queries...')
         self.queries = self.build_queries()
-        self.message = f'Found {self.count} new jobs in the past {self.n_days} days.'
+        print('Done!')
+        print('Execute .crawl(), then check inspect with .get_info()')
 
 
     def __repr__(self):
-        return self.message
+        return self.get_info()
+
+
+    def get_info(self):
+        _ = [self.lever, self.workable, self.greenhouse, self.jobvite, self.builtin, self.other, self.crawl_error]
+
+        __ = ['lever', 'workable', 'greenhouse', 'jobvite', 'builtin', 'other', 'crawl_error']
+        
+        try:
+            _count = 0
+
+            for i in _:
+                _count += len(i)
+
+            _message = f'Found {_count} new jobs in the past {self.n_days} days.'
+
+            print(_message)
+            
+            print('\n\nCounts')
+            print('----------------')
+
+            for i, j in zip(__, _):
+                print(f'{i}: {len(j)}')
+
+            print('\n\nErrors')
+            print('----------------')
+
+            for k, v in self.crawl_error.items():
+                print(f'{k}: {v}')
+        
+        except:
+            print('404... Nothing to display yet. Have you called the crawl() method yet?')
+        
+        return
+
+
+    def get_countries(self):
+        _ = dict(countries_for_language('en'))
+        _.__delitem__('US')
+        _.__delitem__('CA')
+        _['UK'] = 'United Kingdom'
+        _['EU'] = 'Europe'
+
+        return {country.lower():None for country in _.values()}
 
 
     def build_queries(self):
@@ -137,74 +190,191 @@ class QuickJobs(object):
             session.headers['User-Agent'] = self.agent
 
             for url in search(i, stop=self.max_results, pause=2, user_agent=self.agent):
-                if url not in res:
-                    try:
-                        req = session.get(url)
-                        soup = bs(req.content, 'html.parser')
+                if url not in self.all_jobs:
+                    self.all_jobs[url] = None
 
-                    except Exception as e:
-                        self.crawl_error.append(f'{e}')
-                        continue
+                    if 'workable' not in url:
+                        try:
+                            req = session.get(url)
+                            soup = bs(req.content, 'html.parser')
+
+                        except:
+                            continue
 
                     if 'builtin' in url:
-                        try:
-                            soup.find_element(By.XPATH, '//div[@class="remove-text"]')
+                        if soup.find('div', {'class':'remove-text'}) is not None:
                             continue
+
+                        try:
+                            _url = soup.body.findChild('div', attrs={'class': 'apply-now-result'}).get_attribute_list('data-path')[0]
+
+                            _req = session.get(_url)
+                            _soup = bs(_req.content, 'html.parser')
+
+                            try:
+                                title = _soup.title.text.lower()
+                            
+                            except:
+                                title = 'builtin-redirect'
+
                         except:
                             try:
-                                _url = soup.body.findChild('div', attrs={'class': 'apply-now-result'}).get_attribute_list('data-path')[0][0:-16]
+                                title = soup.find('title').text.split('-')[0].lower()
+                                details = soup.find('span', {'class': 'company-address'}).text.lower()
 
-                                req = session.get(_url)
-                                soup = bs(req.content, 'html.parser')
+                                title = title + details
 
-                                title = soup.head.findChild('meta', attrs={'name': 'description'}).get('content').lower()
+                            except:
+                                title = 'builtin-url'
+                    
+                    elif 'lever' in url:
+                        #Find title using different elements in the url
+                        try:
+                            title = soup.find('div', {'class': 'posting-headline'}).findChild('h2').text.lower()
+                        except:
+                            try:
+                                title = soup.find('div', {'class': 'posting-headline'}).findChild('h1').text.lower()
                             except:
                                 try:
-                                    title = soup.title.get_text().lower()
+                                    title = soup.find('div', {'class': 'posting-headline'}).text.lower()
                                 except:
                                     try:
-                                        title = soup.body.main.get_text().replace('\n', ' ').lower()
-                                    except Exception as e:
-                                        self.crawl_error.append(f'{e}')
-                                        continue
+                                        title = soup.find('div', {'class': 'section page-centered posting-header'}).text.lower()
+                                    except:
+                                        try:
+                                            title = soup.title.text.lower()
+
+                                        except Exception as e:
+                                            if url not in self.crawl_error:
+                                                self.crawl_error[url] = e
+                                            
+                                            continue
+
+                        # Try finding loc using different elements in the url
+                        try:
+                            details = soup.find('div', {'class': 'posting-categories'}).findChildren('div')[0].text.lower()
+                        except:
+                            try:
+                                _details = soup.find('div', {'class': 'posting-categories'}).findChildren('div')
+
+                                details = ''
+                                
+                                for i in _details:
+                                    details += i.text.lower() + ' '
+                            
+                            except:
+                                pass
+
+                        details = re.sub(' +', '', details)
+
+                        if details:
+                            title = title + ' ' + details
+                    
+                    elif 'workable' in url:
+                        try:
+                            _ = url.split('/')
+                            __ = 'https://apply.workable.com/api/v2/accounts/'
+                            api_call = __ + _[3] + '/jobs/' + _[5]
+
+                            data = session.get(api_call).json()
+                            title = data["title"]
+                            _details = data["location"].values()
+                            details = ''
+                            for i in _details:
+                                if i:
+                                    details += f'{i}, '
+                            
+                            title = title.lower() + ' ' + details.lower()
+
+                        except Exception as e:
+                            if url not in self.crawl_error:
+                                self.crawl_error[url] = e
+                            continue
+                    
+                    elif 'greenhouse' in url:
+                        try:
+                            title = soup.find('h1', {'class': 'app-title'}).text.strip().lower()
+
+                            details = soup.find('div', {'class': 'location'}).text.replace('\n', '').strip().lower()
+
+                            details = re.sub(' +', ' ', details)
+                            
+                            title = title + ' ' + details
+
+                        except:
+                            try:
+                                title = soup.find('div', {'id': 'header'}).text.replace('\n', '').strip().lower() 
+                                title = re.sub(' +', ' ', title)
+
+                            except Exception as e:
+                                if url not in self.crawl_error:
+                                    self.crawl_error[url] = e
+                                continue
+                    
+                    elif 'jobvite' in url:
+                        try:                            
+                            title = soup.find('h2', attrs={'class': 'jv-header'}).text.replace('\n', '').strip().lower()
+
+                            details = soup.find('p', attrs={'class': 'jv-job-detail-meta'}).text.replace('\n', '').strip(' ').lower()
+
+                            details = re.sub(' +', '', details)
+
+                            title = title + ' ' + details
+
+                        except Exception as e:
+                            if url not in self.crawl_error:
+                                self.crawl_error[url] = e
+                            continue
                         
                     else:
-                        title = soup.title.get_text()
-                        
-                    if title.startswith('Job'):
-                        title = title.strip('Job Application for ')
+                        try:
+                            title = soup.title.text.lower()
 
-                    if self.job_titles == self.ds_titles:
-                        if any(job in title.lower() for job in self.ds_jobs):
+                        except:
                             try:
-                                clean_url = self.url_cleaner(url=_url, title=title)
-
-                                if 'lever' in clean_url:
-                                    self.lever[clean_url] = title
-
-                                elif 'workable' in clean_url:
-                                    self.workable[clean_url] = title
-
-                                elif 'greenhouse' in clean_url:
-                                    self.greenhouse[clean_url] = title
-
-                                elif 'jobvite' in clean_url:
-                                    self.jobvite[clean_url] = title
+                                _title = soup.find_all('h1')
+                            except:
+                                try:
+                                    _title = soup.find_all('h2')
+                                except:
+                                    if url not in self.crawl_error:
+                                        self.crawl_error[url] = e
+                                    continue
                                 
-                                elif 'builtin' in clean_url:
-                                    self.builtin[clean_url] = title
+                            title = ''
+                                
+                            for i in _title:
+                                title += i.text.lower() + ' '
+                        
+                    if self.job_titles == self.ds_titles:
+                        if any(job in title for job in self.ds_jobs):
+                            if not any(country in title for country in self.countries):
+                                if any(i in url for i in ['lever', 'workable', 'greenhouse', 'jobvite']):
+                                    clean_url = self.clean_url(url=url)
+
+                                    if 'lever' in clean_url:
+                                        self.lever[clean_url] = title
+
+                                    elif 'workable' in clean_url:
+                                        self.workable[clean_url] = title
+
+                                    elif 'greenhouse' in clean_url:
+                                        self.greenhouse[clean_url] = title
+
+                                    elif 'jobvite' in clean_url:
+                                        self.jobvite[clean_url] = title
+                                    
+                                elif 'builtin' in url:
+                                        self.builtin[url] = title
 
                                 else:
-                                    self.other[clean_url] = title
-
-                            except:
-                                clean_url = self.url_cleaner(url=url, title=title)
-                                res[clean_url] = title
+                                    self.other[url] = title
 
                     else:
                         if any(job in title.lower() for job in self.job_titles):
+                            # if not any(country in title.lower() for country in self.countries):
                             try:
-                                clean_url = self.url_cleaner(url=_url, title=title)
+                                clean_url = self.clean_url(url=_url, title=title)
 
                                 if 'lever' in clean_url:
                                     self.lever[clean_url] = title
@@ -225,7 +395,7 @@ class QuickJobs(object):
                                     self.other[clean_url] = title
 
                             except:
-                                clean_url = self.url_cleaner(url=url, title=title)
+                                clean_url = self.clean_url(url=url, title=title)
 
                                 res[clean_url] = title
 
@@ -235,118 +405,86 @@ class QuickJobs(object):
                     continue
 
             if res:
-                cheat = res.keys().__str__().split("""', '""")[1]
+                try:
+                    first_key = list(res.keys())[0]
 
-                if 'lever' in cheat:
-                    self.lever.update(res)
+                    if 'lever' in first_key:
+                        self.lever.update(res)
 
-                elif 'workable' in cheat:
-                    self.workable.update(res)
+                    elif 'workable' in first_key:
+                        self.workable.update(res)
 
-                elif 'greenhouse' in cheat:
-                    self.greenhouse.update(res)
+                    elif 'greenhouse' in first_key:
+                        self.greenhouse.update(res)
 
-                elif 'jobvite' in cheat:
-                    self.jobvite.update(res)
+                    elif 'jobvite' in first_key:
+                        self.jobvite.update(res)
 
-                elif 'builtin' in cheat:
-                    self.builtin.update(res)
-
-                else:
-                    self.other.update(res)
-
-            time.sleep(2)
-
-        return self.get_job_count()
-
-
-    def clean_urls(self, url, title):
-        if any(key_word in title for key_word in self.ds_undesired):
-            if not ('scientist' in title or 'engineer' in title):
-                if 'lever' in url:
-                    if not '/apply' in url:
-                        if url.endswith('/'):
-                            url += 'apply/'
-
-                        else:
-                            url += '/apply/'
-
-                elif 'workable' in url:
-                    if not '/apply' in url:
-                        if url.endswith('/'):
-                            url += 'apply/'
-
-                        else:
-                            url += '/apply/'
-
-                elif 'greenhouse' in url:
-                    if not '#app' in url:
-                        if url.endswith('/'):
-                            url += '#app'
-                        
-                        else:
-                            url += '/#app'
-
-                elif 'jobvite' in url:
-                    if not '/apply' in url:
-                        if url.endswith('/'):
-                            url += 'apply/'
-
-                        else:
-                            url += '/apply/'
-
-        else:
-            if 'lever' in url:
-                if not '/apply' in url:
-                    if url.endswith('/'):
-                        url += 'apply/'
-
-                    else:
-                        url += '/apply/'
-
-            elif 'workable' in url:
-                if not '/apply' in url:
-                    if url.endswith('/'):
-                        url += 'apply/'
-
-                    else:
-                        url += '/apply/'
-
-            elif 'greenhouse' in url:
-                if not '#app' in url:
-                    if url.endswith('/'):
-                        url += '#app'
+                    elif 'builtin' in first_key:
+                        self.builtin.update(res)
                     
                     else:
-                        url += '/#app'
+                        self.other.update(res)
 
-            elif 'jobvite' in url:
-                if not '/apply' in url:
-                    if url.endswith('/'):
-                        url += 'apply/'
+                except:
+                    pass
 
-                    else:
-                        url += '/apply/'
-            
-        return url
-
-
-    def get_job_count(self):
-        self.count = len(self.lever) + len(self.workable) + len(self.greenhouse) + len(self.jobvite) + len(self.builtin) + len(self.other)
+            time.sleep(2)
 
         return
 
 
+    def clean_url(self, url):
+        if url.endswith('apply') or url.endswith('apply/') or url.endswith('#app') or url.endswith('#app/'):
+            return url
+        
+        else:
+            if 'lever' in url:
+                _url = url.split('/')
+
+                if len(_url[4]) == 36:
+                    url = 'https://jobs.lever.co/' + _url[3] + '/' + _url[4] + '/apply'
+
+            elif 'workable' in url:
+                if url.split('/')[-2] == 'j':
+                    if url.endswith('/'):
+                        url = url + 'apply/'
+
+                    else:
+                        url = url + '/apply/'
+
+            elif 'greenhouse' in url:
+                if '#app' not in url:
+                    if url.endswith('/'):
+                        url = url + '#app'
+                    
+                    else:
+                        url = url + '/#app'
+
+            elif 'jobvite' in url:
+                if 'apply' not in url:
+                    if url.endswith('/'):
+                        url = url + 'apply/'
+
+                    else:
+                        url = url + '/apply/'
+                
+            return url
+
+
     def lever_apps(self):
         browser = webdriver.Safari()
+        count = 0
 
         for url in self.lever.keys():
+            count += 1
+
             try:
                 browser.switch_to.new_window('tab')
                 browser.get(url)
+
             except Exception as e:
                 print(f'{url} FAILED: {e}')
-                self.errors.append(url)
                 continue
 
             time.sleep(2)
@@ -372,12 +510,14 @@ class QuickJobs(object):
 
                 website = browser.find_element(By.NAME, 'urls[Other]')
                 website.send_keys(self.my_info['website'])
+
             except:
                 pass
 
             try:
                 salary = browser.find_element(By.XPATH, "//textarea[@name='cards[6aa3a729-c53d-43f5-9ddd-8c18bfd2a146][field0]']")
                 salary.send_keys(self.my_info['salary'])
+
             except:
                 pass
 
@@ -391,6 +531,7 @@ class QuickJobs(object):
                     "//input[@type='radio' and @name='cards[dcbfc765-5272-44d1-a58d-0ce56afd20f4][field1]' and @'No']")
                 browser.execute_script("arguments[0].scrollIntoView();", workauth1)
                 browser.execute_script("arguments[0].click();", workauth1)    
+
             except:
                 pass
 
@@ -400,14 +541,25 @@ class QuickJobs(object):
             time.sleep(3)
 
             try:
-                consent_box = browser.find_element(By.NAME, 'consent[marketing]')
-                browser.execute_script("arguments[0].scrollIntoView();", consent_box)
-                browser.execute_script("arguments[0].click();", consent_box)
+                captcha = browser.find_element(By.XPATH, "//div[@id='checkbox']")
+                browser.execute_script("arguments[0].scrollIntoView();", captcha)
+                browser.execute_script("arguments[0].click();", captcha)
+
             except:
                 pass
 
-        return
-        
+            try:
+                consent_box = browser.find_element(By.NAME, 'consent[marketing]')
+                browser.execute_script("arguments[0].scrollIntoView();", consent_box)
+                browser.execute_script("arguments[0].click();", consent_box)
+
+            except:
+                pass
+
+            if count == len(self.lever):
+                print('All done!')
+                time.sleep(99999999999999)
+
 
     def greenhouse_apps(self):
         browser = webdriver.Safari()
@@ -587,26 +739,23 @@ class QuickJobs(object):
 
 
 def main():
-    qj = QuickJobs(job_titles='ds')
+    try:
+        qj = QuickJobs(job_titles='ds')
 
-    if qj.queries:
-        qj.crawler()
-
-    if qj.lever:
-        qj.lever_apps()
-    if qj.workable:
-        qj.workable_apps()
-    if qj.greenhouse:
-        qj.greenhouse_apps()
-    if qj.jobvite:
-        qj.jobvite_apps()
-    if qj.builtin:
-        qj.builtin_apps()
-    if qj.other:
-        qj.other_apps()
-
-    return
+        if qj.queries:
+            qj.crawler()
+        
+        return qj
+    
+    except Exception as e:
+        print(e)
+        pass
 
 
 if __name__ == '__main__':
-    main()
+    qj = QuickJobs(job_titles='ds')
+    
+    if qj.queries:
+        qj.crawler()
+    
+    

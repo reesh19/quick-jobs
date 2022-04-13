@@ -36,6 +36,7 @@ class QuickJobs(object):
                         'res': '/Users/reesh/Projects/qj/quickjobs/resume.pdf',
                         'website': 'https://ricardo-rodriguez.medium.com/',
                         'salary': '$100,000'}
+
         self.ds_titles = ["data analyst", "data scientist", "machine learning"]
         self.ds_undesired = ['senior', 
                              'sr.',
@@ -56,6 +57,7 @@ class QuickJobs(object):
                         'Coupertino', 
                         'Santa Monica', 
                         'California']
+
         self.urls = ['jobs.lever.co/*', 
                      'apply.workable.com/*', 
                      'boards.greenhouse.io/*', 
@@ -619,10 +621,10 @@ class QuickJobs(object):
             time.sleep(2)
 
             firstname = browser.find_element(By.NAME, 'firstname')
-            firstname.send_keys(self.my_info['firstname'])
+            firstname.send_keys(self.my_info['name1'])
 
             lastname = browser.find_element(By.NAME, 'lastname')
-            lastname.send_keys(self.my_info['lastname'])
+            lastname.send_keys(self.my_info['name2'])
 
             email = browser.find_element(By.NAME, 'email')
             email.send_keys(self.my_info['email'])

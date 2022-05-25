@@ -605,108 +605,112 @@ class QuickJobs(object):
         count = 0
 
         for url in self.lever.keys():
-            count += 1
+            if url not in self.old_jobs | self.new_jobs | self.crawl_error:
+                count += 1
 
-            try:
-                browser.switch_to.new_window('tab')
-                browser.get(url)
-                time.sleep(2)
+                try:
+                    browser.switch_to.new_window('tab')
+                    browser.get(url)
+                    time.sleep(2)
 
-            except Exception as e:
-                print(f'{url} FAILED: {e}')
-                continue
+                except Exception as e:
+                    print(f'{url} FAILED: {e}')
+                    continue
 
-            try:
-                fullname = browser.find_element(By.NAME, 'name')
-                fullname.send_keys(self.my_info['fullname'])
-            except:
-                pass
+                try:
+                    fullname = browser.find_element(By.NAME, 'name')
+                    fullname.send_keys(self.my_info['fullname'])
+                except:
+                    pass
 
-            try:
-                email = browser.find_element(By.NAME, 'email')
-                email.send_keys(self.my_info['email'])
-            except:
-                pass
+                try:
+                    email = browser.find_element(By.NAME, 'email')
+                    email.send_keys(self.my_info['email'])
+                except:
+                    pass
 
-            try:
-                phone = browser.find_element(By.NAME, 'phone')
-                phone.send_keys(self.my_info['phone'])
-            except:
-                pass
+                try:
+                    phone = browser.find_element(By.NAME, 'phone')
+                    phone.send_keys(self.my_info['phone'])
+                except:
+                    pass
 
-            try:
-                org = browser.find_element(By.NAME, 'org')
-                org.send_keys(self.my_info['current_company'])
-            except:
-                pass
-            
-            try:
-                linkedin = browser.find_element(By.NAME, 'urls[LinkedIn]')
-                linkedin.send_keys(self.my_info['linkedin'])
-            except:
-                pass
+                try:
+                    org = browser.find_element(By.NAME, 'org')
+                    org.send_keys(self.my_info['current_company'])
+                except:
+                    pass
+                
+                try:
+                    linkedin = browser.find_element(By.NAME, 'urls[LinkedIn]')
+                    linkedin.send_keys(self.my_info['linkedin'])
+                except:
+                    pass
 
-            try:
-                github = browser.find_element(By.NAME, 'urls[GitHub]')
-                github.send_keys(self.my_info['github'])
-            except:
-                pass
+                try:
+                    github = browser.find_element(By.NAME, 'urls[GitHub]')
+                    github.send_keys(self.my_info['github'])
+                except:
+                    pass
 
-            try:
-                website = browser.find_element(By.NAME, 'urls[Other]')
-                website.send_keys(self.my_info['website'])
-            except:
-                pass
+                try:
+                    website = browser.find_element(By.NAME, 'urls[Other]')
+                    website.send_keys(self.my_info['website'])
+                except:
+                    pass
 
-            try:
-                salary = browser.find_element(By.XPATH, "//textarea[@name='cards[6aa3a729-c53d-43f5-9ddd-8c18bfd2a146][field0]']")
-                salary.send_keys(self.my_info['salary'])
-            except:
-                pass
+                try:
+                    salary = browser.find_element(By.XPATH, "//textarea[@name='cards[6aa3a729-c53d-43f5-9ddd-8c18bfd2a146][field0]']")
+                    salary.send_keys(self.my_info['salary'])
+                except:
+                    pass
 
-            try:    
-                workauth0 = browser.find_element(By.XPATH, 
-                    "//input[@type='radio' and @name='cards[dcbfc765-5272-44d1-a58d-0ce56afd20f4][field0]' and @'Yes']")
-                browser.execute_script("arguments[0].scrollIntoView();", workauth0)
-                browser.execute_script("arguments[0].click();", workauth0)
-            except:
-                pass
+                try:    
+                    workauth0 = browser.find_element(By.XPATH, 
+                        "//input[@type='radio' and @name='cards[dcbfc765-5272-44d1-a58d-0ce56afd20f4][field0]' and @'Yes']")
+                    browser.execute_script("arguments[0].scrollIntoView();", workauth0)
+                    browser.execute_script("arguments[0].click();", workauth0)
+                except:
+                    pass
 
-            try:
-                workauth1 = browser.find_element(By.XPATH, 
-                    "//input[@type='radio' and @name='cards[dcbfc765-5272-44d1-a58d-0ce56afd20f4][field1]' and @'No']")
-                browser.execute_script("arguments[0].scrollIntoView();", workauth1)
-                browser.execute_script("arguments[0].click();", workauth1)    
-            except:
-                pass
+                try:
+                    workauth1 = browser.find_element(By.XPATH, 
+                        "//input[@type='radio' and @name='cards[dcbfc765-5272-44d1-a58d-0ce56afd20f4][field1]' and @'No']")
+                    browser.execute_script("arguments[0].scrollIntoView();", workauth1)
+                    browser.execute_script("arguments[0].click();", workauth1)    
+                except:
+                    pass
 
-            try:
-                resume = browser.find_element(By.XPATH, "//input[@type='file']")
-                resume.send_keys('/Users/reesh/Projects/qj/quickjobs/resume.pdf')
-                time.sleep(3)
-            except:
-                pass
+                try:
+                    resume = browser.find_element(By.XPATH, "//input[@type='file']")
+                    resume.send_keys('/Users/reesh/Downloads/resume.pdf')
+                    time.sleep(3)
+                except:
+                    pass
 
-            try:
-                captcha = browser.find_element(By.XPATH, "//div[@id='checkbox']")
-                browser.execute_script("arguments[0].scrollIntoView();", captcha)
-                browser.execute_script("arguments[0].click();", captcha)
-            except:
-                pass
+                try:
+                    captcha = browser.find_element(By.XPATH, "//div[@id='checkbox']")
+                    browser.execute_script("arguments[0].scrollIntoView();", captcha)
+                    browser.execute_script("arguments[0].click();", captcha)
+                except:
+                    pass
 
-            try:
-                consent_box = browser.find_element(By.NAME, 'consent[marketing]')
-                browser.execute_script("arguments[0].scrollIntoView();", consent_box)
-                browser.execute_script("arguments[0].click();", consent_box)
-            except:
-                pass
+                try:
+                    consent_box = browser.find_element(By.NAME, 'consent[marketing]')
+                    browser.execute_script("arguments[0].scrollIntoView();", consent_box)
+                    browser.execute_script("arguments[0].click();", consent_box)
+                except:
+                    pass
 
-            if count == len(self.lever):
-                print('All done!')
-                time.sleep(99999999999999)
-            
+                if count == len(self.lever):
+                    print('All done!')
+                    time.sleep(99999999999999)
+                
+                else:
+                    time.sleep(self.rand)
+                    continue
+
             else:
-                time.sleep(self.rand)
                 continue
 
 
@@ -750,32 +754,42 @@ class QuickJobs(object):
             except:
                 pass
 
-            # TODO
-            # try:
-            #     location = browser.find_element(By.PARTIAL_LINK_TEXT, 'location')
-            #     class="location-city" "Los Angeles"
-            #     class="location-country-long-name" "United States"
-            #     class="location-country-short-name" "USA"
-            #     class="location-latitude" "34.05513"
-            #     class="location-longitude" "-118.25703"
-            #     class="location-state-short-name" "CA"
-            #     class="location-state-long-name" "California"
-            #     class="location-postal-code" ""
-            
-            #     linkedin.send_keys(self.my_info['linkedin'])
-            
-            # except:
-            #     pass
+            try:
+                city = browser.find_element(By.CLASS_NAME, 'location-city')
+                city.send_keys(self.my_info['greenhouse']['city'])
+
+                country_long = browser.find_element(By.CLASS_NAME, 'location-country-long-name')
+                country_long.send_keys(self.my_info['greenhouse']['country_long'])
+
+                country_short = browser.find_element(By.CLASS_NAME, 'location-country-short-name')
+                country_short.send_keys(self.my_info['greenhouse']['country_short'])
+
+                lat = browser.find_element(By.CLASS_NAME, 'location-latitude')
+                lat.send_keys(self.my_info['greenhouse']['latitude'])
+
+                lng = browser.find_element(By.CLASS_NAME, 'location-longitude')
+                lng.send_keys(self.my_info['greenhouse']['longitude'])
+
+                state_short = browser.find_element(By.CLASS_NAME, 'location-state-short-name')
+                state_short.send_keys(self.my_info['greenhouse']['state_short'])
+
+                state_long = browser.find_element(By.CLASS_NAME, 'location-state-long-name')
+                state_long.send_keys(self.my_info['greenhouse']['state_long'])
+
+                zipcode = browser.find_element(By.CLASS_NAME, 'location-postal-code')
+                zipcode.send_keys(self.my_info['greenhouse']['postal_code'])
+            except:
+                pass
 
             try:
-                linkedin = browser.find_element(By.PARTIAL_LINK_TEXT, 'LinkedIn')
+                linkedin = browser.find_element(By.XPATH, "//*[@autocomplete='custom-question-linkedin-profile']")
                 linkedin.send_keys(self.my_info['linkedin'])
             except:
                 pass
             
             try:
                 resume = browser.find_element(By.XPATH, "//input[@type='file']")
-                resume.send_keys('/Users/reesh/Projects/qj/quickjobs/resume.pdf')
+                resume.send_keys('/Users/reesh/Downloads/resume.pdf')
                 time.sleep(3)
             except:
                 pass
@@ -783,6 +797,7 @@ class QuickJobs(object):
             if count == len(self.greenhouse):
                 print('All done!')
                 time.sleep(99999999999999)
+
             else:
                 time.sleep(self.rand)
                 continue
@@ -849,7 +864,7 @@ class QuickJobs(object):
 
             try:
                 resume = browser.find_element(By.XPATH, "//input[@data-ui='resume']")
-                resume.send_keys('/Users/reesh/Projects/qj/quickjobs/resume.pdf')
+                resume.send_keys('/Users/reesh/Downloads/resume.pdf')
                 time.sleep(3)
             except:
                 pass
@@ -935,7 +950,7 @@ class QuickJobs(object):
 
             try:
                 resume = browser.find_element(By.XPATH, "//input[@id='file-input-0']")
-                resume.send_keys('/Users/reesh/Projects/qj/quickjobs/resume.pdf')
+                resume.send_keys('/Users/reesh/Downloads/resume.pdf')
                 time.sleep(3)
             except:
                 pass
